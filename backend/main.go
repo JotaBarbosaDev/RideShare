@@ -51,7 +51,9 @@ func main() {
 	r.Get("/getRoutes", handlers.GetRoutes)
 
 	r.Post("/payPessoa", handlers.PayPessoa)
+	r.Get("/debtPessoa/{id}", handlers.DebtPessoa)
+	r.Get("/GetWhatPersonPayed/{id}", handlers.GetWhatPersonPayed)
 
-	fmt.Println("Listening on port ", configs.GetServerPort())
+	fmt.Println("Listening on port:", configs.GetServerPort())
 	http.ListenAndServe(fmt.Sprintf(":%s", configs.GetServerPort()), r)
 }

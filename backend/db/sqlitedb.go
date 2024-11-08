@@ -81,17 +81,17 @@ func GetAllEvents() ([]models.Event, error) {
 	return events, nil
 }
 
-func CheckIfPersonExists(id int64) bool {
+func CheckIfEventExists(id int64) bool {
 	db, err := sql.Open("sqlite3", "./rideShare.db")
 	if err != nil {
 		return false
 	}
 	defer db.Close()
 
-	row := db.QueryRow("SELECT id FROM persons WHERE id = ?", id)
+	row := db.QueryRow("SELECT id FROM events WHERE id = ?", id)
 
-	var person models.Person
-	err = row.Scan(&person.ID)
+	var event models.Event
+	err = row.Scan(&event.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return false
@@ -173,26 +173,6 @@ func GetAllPersons() ([]models.Person, error) {
 	return persons, nil
 }
 
-func CheckIfRouteExists(id int64) bool {
-	db, err := sql.Open("sqlite3", "./rideShare.db")
-	if err != nil {
-		return false
-	}
-	defer db.Close()
-
-	row := db.QueryRow("SELECT id FROM routes WHERE id = ?", id)
-
-	var route models.Route
-	err = row.Scan(&route.ID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return false
-		}
-		return false
-	}
-	return true
-}
-
 func PayPessoa(id int64, dindin int64) error {
 	db, err := sql.Open("sqlite3", "./rideShare.db")
 	if err != nil {
@@ -205,6 +185,45 @@ func PayPessoa(id int64, dindin int64) error {
 		return err
 	}
 	return nil
+}
+
+func GetWhatPersonPayed(id int64) (int64, error) {
+	db, err := sql.Open("sqlite3", "./rideShare.db")
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	row := db.QueryRow("SELECT pricetopay FROM persons WHERE id = ?", id)
+
+	var pricetopay int64
+	err = row.Scan(&pricetopay)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil
+		}
+		return 0, err
+	}
+	return pricetopay, nil
+}
+
+func CheckIfPersonExists(id int64) bool {
+	db, err := sql.Open("sqlite3", "./rideShare.db")
+	if err != nil {
+		return false
+	}
+	defer db.Close()
+	row := db.QueryRow("SELECT id FROM persons WHERE id = ?", id)
+
+	var personID int64
+	err = row.Scan(&personID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+		return false
+	}
+	return true
 }
 
 // ROUTES
@@ -260,17 +279,17 @@ func GetAllRoutes() ([]models.Route, error) {
 	return routes, nil
 }
 
-func CheckIfEventExists(id int64) bool {
+func CheckIfRouteExists(id int64) bool {
 	db, err := sql.Open("sqlite3", "./rideShare.db")
 	if err != nil {
 		return false
 	}
 	defer db.Close()
 
-	row := db.QueryRow("SELECT id FROM events WHERE id = ?", id)
+	row := db.QueryRow("SELECT id FROM routes WHERE id = ?", id)
 
-	var event models.Event
-	err = row.Scan(&event.ID)
+	var route models.Route
+	err = row.Scan(&route.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return false
@@ -278,6 +297,26 @@ func CheckIfEventExists(id int64) bool {
 		return false
 	}
 	return true
+}
+
+func GetRoutePrice(id int64) (int64, error) {
+	db, err := sql.Open("sqlite3", "./rideShare.db")
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	row := db.QueryRow("SELECT price FROM routes WHERE id = ?", id)
+
+	var price int64
+	err = row.Scan(&price)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil
+		}
+		return 0, err
+	}
+	return price, nil
 }
 
 func CreateAllTablesAndFile() {
@@ -303,7 +342,7 @@ func CreateAllTablesAndFile() {
 	}
 
 	createTableSQL = `CREATE TABLE IF NOT EXISTS persons (
-		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,		
+		"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,		
 		"name" TEXT,
 		"pricetopay" INTEGER
 	);`

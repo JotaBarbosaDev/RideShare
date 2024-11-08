@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"strconv"
@@ -31,8 +30,6 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Price to pay is negative", http.StatusBadRequest)
 		return
 	}
-
-	fmt.Println(person)
 
 	err = db.CreatePerson(person.Name, person.Pricetopay)
 	if err != nil {

@@ -12,16 +12,23 @@ type Person = {
     pricetopay: number;
 };
 
+function createLinkForBackend() {
+    const our_url = window.location.href;
+    //change the port to 9000
+    const url = new URL(our_url);
+    url.port = '9000';
+    return url.origin;
+}
+
 interface ModalPessoasProps {}
 
 const ModalPessoas: React.FC<ModalPessoasProps> = () => {
-    const [pessoas, setPessoas] = useState<string[]>([]);
     const [pessoasArr, setPessoasArr] = useState<Person[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [isOpen, setIsOpen] = useState(false);
     
     function getPessoas() {
-        fetch('http://localhost:9000/getPersons', {
+        fetch(createLinkForBackend() + '/getPersons', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -38,7 +45,7 @@ const ModalPessoas: React.FC<ModalPessoasProps> = () => {
     }, []);
 
     const handleCreatePerson = async () => {
-        const response = await fetch('http://localhost:9000/createPerson', {
+        const response = await fetch(createLinkForBackend() + '/createPerson', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

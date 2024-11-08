@@ -10,7 +10,15 @@ type Route = {
     distance: number;
 };
 
-interface ModalRoutesProps {}
+function createLinkForBackend() {
+    const our_url = window.location.href;
+    //change the port to 9000
+    const url = new URL(our_url);
+    url.port = '9000';
+    return url.origin;
+}
+
+interface ModalRoutesProps { }
 
 const ModalRoutes: React.FC<ModalRoutesProps> = () => {
     const [routes, setRoutes] = useState<string[]>([]);
@@ -21,26 +29,26 @@ const ModalRoutes: React.FC<ModalRoutesProps> = () => {
     const [inputEndValue, setInputEndValue] = useState<string>('');
     const [inputDistanceValue, setInputDistanceValue] = useState<string>('');
     const [isOpen, setIsOpen] = useState(false);
-    
+
     function getRoutes() {
-        fetch('http://localhost:9000/getRoutes', {
+        fetch(createLinkForBackend() + '/getRoutes', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            setRoutesArr(data);
-        })
-        .catch(error => console.error('Error fetching routes:', error));
+            .then(response => response.json())
+            .then(data => {
+                setRoutesArr(data);
+            })
+            .catch(error => console.error('Error fetching routes:', error));
     }
     useEffect(() => {
         getRoutes();
     }, []);
 
     const handleCreateRoutes = async () => {
-        const response = await fetch('http://localhost:9000/createRoute', {
+        const response = await fetch(createLinkForBackend() + '/createRoute', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,18 +67,20 @@ const ModalRoutes: React.FC<ModalRoutesProps> = () => {
         } else {
             console.error('Request failed');
         }
+        window.location.reload();
     };
 
-     const handleRemoveRout = async (id: string) => { 
-         const response = await fetch(`http://localhost:9000/deleteRoute?ID=${id}`, {
-             method: 'DELETE',
-         });
+    const handleRemoveRout = async (id: string) => {
+        const response = await fetch(`http://localhost:9000/deleteRoute?ID=${id}`, {
+            method: 'DELETE',
+        });
 
-         if (response.ok) {
-             console.log('Request successful');
-         } else {
-             console.error('Request failed');
+        if (response.ok) {
+            console.log('Request successful');
+        } else {
+            console.error('Request failed');
         }
+        window.location.reload();
     }
 
 
@@ -84,46 +94,46 @@ const ModalRoutes: React.FC<ModalRoutesProps> = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 overflow-y-auto">
                     <div className="bg-white p-8 rounded-lg w-full max-w-2xl">
                         <h2 className="text-2xl font-bold mb-4">Gerir Rotas</h2>
-                        
-                            <input
-                                type="text"
-                                value={inputNameValue}
-                                onChange={(e) => setInputNameValue(e.target.value)}
-                                placeholder="Nome"
-                                className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
-                            />
-                            <input
-                                type="number"
-                                value={inputPriceValue}
-                                onChange={(e) => setInputPriceValue(e.target.value)}
-                                placeholder="Preço"
-                                className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
-                            />
-                            <input
-                                type="text"
-                                value={inputStartValue}
-                                onChange={(e) => setInputStartValue(e.target.value)}
-                                placeholder="Ponto de Inicio"
-                                className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
-                            />
-                            <input
-                                type="text"
-                                value={inputEndValue}
-                                onChange={(e) => setInputEndValue(e.target.value)}
-                                placeholder="Ponto de Fim"
-                                className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
-                            />
-                            <input
-                                type="number"
-                                value={inputDistanceValue}
-                                onChange={(e) => setInputDistanceValue(e.target.value)}
-                                placeholder="Distancia"
-                                className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
-                            />
-                            <button onClick={handleCreateRoutes} className="bg-gradient-to-r from-purple-500 to-purple-700 text-white p-2 rounded w-full hover:from-purple-600 hover:to-purple-800 transition duration-300 transform">
-                                Adicionar
-                            </button>
-                        
+
+                        <input
+                            type="text"
+                            value={inputNameValue}
+                            onChange={(e) => setInputNameValue(e.target.value)}
+                            placeholder="Nome"
+                            className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
+                        />
+                        <input
+                            type="number"
+                            value={inputPriceValue}
+                            onChange={(e) => setInputPriceValue(e.target.value)}
+                            placeholder="Preço"
+                            className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
+                        />
+                        <input
+                            type="text"
+                            value={inputStartValue}
+                            onChange={(e) => setInputStartValue(e.target.value)}
+                            placeholder="Ponto de Inicio"
+                            className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
+                        />
+                        <input
+                            type="text"
+                            value={inputEndValue}
+                            onChange={(e) => setInputEndValue(e.target.value)}
+                            placeholder="Ponto de Fim"
+                            className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
+                        />
+                        <input
+                            type="number"
+                            value={inputDistanceValue}
+                            onChange={(e) => setInputDistanceValue(e.target.value)}
+                            placeholder="Distancia"
+                            className="w-full p-2 border border-gray-300 rounded mb-2 text-black flex-grow"
+                        />
+                        <button onClick={handleCreateRoutes} className="bg-gradient-to-r from-purple-500 to-purple-700 text-white p-2 rounded w-full hover:from-purple-600 hover:to-purple-800 transition duration-300 transform">
+                            Adicionar
+                        </button>
+
                         <div className="max-h-64 mt-7 overflow-y-auto">
                             <ul>
                                 {routesArr && routesArr.map((route, index) => (

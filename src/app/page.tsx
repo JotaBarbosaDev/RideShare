@@ -28,12 +28,20 @@ interface Event {
   description: string;
 }
 
+function createLinkForBackend() {
+  const our_url = window.location.href;
+  //change the port to 9000
+  const url = new URL(our_url);
+  url.port = '9000';
+  return url.origin;
+}
+
 
 function CalendarApp() {
   let eventsArr: Event[] = [];
 
 
-  function clear_all_events(){
+  function clear_all_events() {
     eventsArr = [];
     calendar.events.getAll().forEach((event) => {
       calendar.events.remove(event.id);
@@ -76,40 +84,38 @@ function CalendarApp() {
     ],
   });
 
-  
-  function call_backend_add_all_events(){
-      fetch('http://localhost:9000/getEvents', {
-          method: 'GET',
-          headers: {
-              'Accept': 'application/json',
-          },
-      })
+  function call_backend_add_all_events() {
+    fetch(createLinkForBackend() + '/getEvents', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    })
       .then(response => response.json())
       .then(data => {
-        
-          if (data && Array.isArray(data)) {
-            const newEvents = data.map(event => ({
-              id: event.id.toString(),
-              title: event.title,
-              start: event.start,
-              end: event.end,
-              description: event.description
-            }));
-            setEventsArr(newEvents);
-          } else {
-            console.error('Invalid data received');
-            setEventsArr([]);
-          }
+
+        if (data && Array.isArray(data)) {
+          const newEvents = data.map(event => ({
+            id: event.id.toString(),
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            description: event.description
+          }));
+          setEventsArr(newEvents);
+        } else {
+          console.error('Invalid data received');
+          setEventsArr([]);
+        }
       });
   }
 
 
-  
- 
+
   useEffect(() => {
     const date = new Date();
-  
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());  
+
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     call_backend_add_all_events();
   }, []);
 
@@ -121,7 +127,7 @@ function CalendarApp() {
         <Modal onEventsChange={(events) => setEventsArr(events)} />
         <ModalPessoas />
         <ModalRoutes />
-        <ModalPrecos eventsArr={eventsArr}/>
+        <ModalPrecos eventsArr={eventsArr} />
       </div>
       <div className="max-w-6xl mx-auto">
         <ScheduleXCalendar calendarApp={calendar} />

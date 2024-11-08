@@ -25,7 +25,6 @@ func CreateRoute(w http.ResponseWriter, r *http.Request) {
 	route.EndName = r.FormValue("End")
 	route.Distance = r.FormValue("Distance")
 
-	fmt.Println(route)
 
 	err = db.CreateRoute(route)
 	if err != nil {
