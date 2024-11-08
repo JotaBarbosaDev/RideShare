@@ -1,12 +1,12 @@
 package models
 
 type Route struct {
-	ID        int64  `json:"id"`
-	Name      string `json:"name"`
-	StartName string `json:"startName"`
-	EndName   string `json:"endName"`
-	Distance  string `json:"distance"`
-	Price     int    `json:"price"`
+	ID        int64   `json:"id"`
+	Name      string  `json:"name"`
+	StartName string  `json:"startName"`
+	EndName   string  `json:"endName"`
+	Distance  string  `json:"distance"`
+	Price     float64 `json:"price"`
 }
 
 type Event struct {

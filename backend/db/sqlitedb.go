@@ -299,7 +299,7 @@ func CheckIfRouteExists(id int64) bool {
 	return true
 }
 
-func GetRoutePrice(id int64) (int64, error) {
+func GetRoutePrice(id int64) (float64, error) {
 	db, err := sql.Open("sqlite3", "./rideShare.db")
 	if err != nil {
 		return 0, err
@@ -308,7 +308,7 @@ func GetRoutePrice(id int64) (int64, error) {
 
 	row := db.QueryRow("SELECT price FROM routes WHERE id = ?", id)
 
-	var price int64
+	var price float64
 	err = row.Scan(&price)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -358,7 +358,7 @@ func CreateAllTablesAndFile() {
 		"start" TEXT,
 		"end" TEXT,
 		"distance" TEXT,
-		"price" INTEGER
+		"price" REAL
 	);`
 
 	_, err = db.Exec(createTableSQL)

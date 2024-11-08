@@ -29,11 +29,7 @@ interface Event {
 }
 
 function createLinkForBackend() {
-  const our_url = window.location.href;
-  //change the port to 9000
-  const url = new URL(our_url);
-  url.port = '9000';
-  return url.origin;
+  return "http://localhost:9000"
 }
 
 

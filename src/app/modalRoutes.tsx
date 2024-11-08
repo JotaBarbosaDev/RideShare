@@ -11,11 +11,7 @@ type Route = {
 };
 
 function createLinkForBackend() {
-    const our_url = window.location.href;
-    //change the port to 9000
-    const url = new URL(our_url);
-    url.port = '9000';
-    return url.origin;
+    return "http://localhost:9000"
 }
 
 interface ModalRoutesProps { }
@@ -62,22 +58,26 @@ const ModalRoutes: React.FC<ModalRoutesProps> = () => {
             }),
         });
 
-        if (response.ok) {
+        if (response.ok)
+        {
             console.log('Request successful');
-        } else {
+        } else
+        {
             console.error('Request failed');
         }
         window.location.reload();
     };
 
     const handleRemoveRout = async (id: string) => {
-        const response = await fetch(`http://localhost:9000/deleteRoute?ID=${id}`, {
+        const response = await fetch(createLinkForBackend() + '/deleteRoute?ID=' + id, {
             method: 'DELETE',
         });
 
-        if (response.ok) {
+        if (response.ok)
+        {
             console.log('Request successful');
-        } else {
+        } else
+        {
             console.error('Request failed');
         }
         window.location.reload();

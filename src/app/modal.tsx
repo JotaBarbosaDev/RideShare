@@ -16,11 +16,7 @@ type Route = {
 };
 
 function createLinkForBackend() {
-    const our_url = window.location.href;
-    //change the port to 9000
-    const url = new URL(our_url);
-    url.port = '9000';
-    return url.origin;
+    return "http://localhost:9000"
 }
 
 const Modal: React.FC<{ onEventsChange: (events: any[]) => void }> = ({ onEventsChange }) => {
@@ -135,7 +131,7 @@ const Modal: React.FC<{ onEventsChange: (events: any[]) => void }> = ({ onEvents
     };
 
     async function deleteFOdase(id: string) {
-        const response = await fetch(`http://localhost:9000/deleteEvent?ID=${id}`, {
+        const response = await fetch(createLinkForBackend() + '/deleteEvent?ID=' + id, {
             method: 'DELETE',
         });
 

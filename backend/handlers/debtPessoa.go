@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"fmt"
 	"github.com/JotaBarbosaDev/RideShare/backend/db"
 	"github.com/go-chi/chi/v5"
 )
@@ -38,9 +39,11 @@ func DebtPessoa(w http.ResponseWriter, r *http.Request) {
 	price_to_pay := 0.0
 	for i := 0; i < len(events); i++ {
 		persons_arr := strings.Split(events[i].PersonsIDs, "//")
+		fmt.Println(persons_arr)
 		for j := 0; j < len(persons_arr); j++ {
 			if persons_arr[j] == strconv.FormatInt(id, 10) {
 				routeID, err := strconv.ParseInt(events[i].RouteID, 10, 64)
+				fmt.Println(routeID)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Header().Add("Content-Type", "application/json")
@@ -48,6 +51,7 @@ func DebtPessoa(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				route_price, err := db.GetRoutePrice(routeID)
+				fmt.Println(route_price)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Header().Add("Content-Type", "application/json")

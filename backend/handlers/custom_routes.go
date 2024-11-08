@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/JotaBarbosaDev/RideShare/backend/db"
 	"github.com/JotaBarbosaDev/RideShare/backend/models"
@@ -15,17 +16,19 @@ func CreateRoute(w http.ResponseWriter, r *http.Request) {
 	var route models.Route
 
 	route.Name = r.FormValue("Name")
-	totalPay, err := strconv.ParseInt(r.FormValue("Price"), 10, 64)
+	priceStr := r.FormValue("Price")
+	priceStr = strings.ReplaceAll(priceStr, ",", ".")
+	priceFloat, err := strconv.ParseFloat(priceStr, 64)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid Price to pay", http.StatusBadRequest)
 		return
 	}
-	route.Price = int(totalPay)
+	route.Price = priceFloat
 	route.StartName = r.FormValue("Start")
 	route.EndName = r.FormValue("End")
 	route.Distance = r.FormValue("Distance")
-
-
+	fmt.Println(route)
 	err = db.CreateRoute(route)
 	if err != nil {
 		fmt.Println(err)
@@ -68,4 +71,3 @@ func GetRoutes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 }
-
